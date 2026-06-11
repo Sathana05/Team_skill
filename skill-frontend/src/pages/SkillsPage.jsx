@@ -15,7 +15,7 @@ export default function SkillsPage() {
   useEffect(() => {
     api.getProfile(token).then((d) => setSkills(d.skills || []));
   }, []);
-
+//test comment
   const add = async (e) => {
     e.preventDefault();
     setError("");
