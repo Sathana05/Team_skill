@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 const JWT_SECRET = process.env.JWT_SECRET || "kyyba_skill_jwt_secret_dev";
-// test
+
 // ── MongoDB Connection ────────────────────────────────────────────────────────
 mongoose
   .connect(process.env.MONGO_URI || "mongodb://localhost:27017/kyyba_skill_tracker")
