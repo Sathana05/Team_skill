@@ -9,7 +9,7 @@ export default function AuthPage({ mode, onNavigate }) {
 
   const set = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
 
-  //testing
+  //testing added comment
   const submit = async (e) => {
     e.preventDefault();
     setError("");
