@@ -4,7 +4,6 @@ import api from "../api";
 
 const LEVELS = ["Beginner", "Intermediate", "Advanced"];
 const LEVEL_COLOR = { Beginner: "badge-beginner", Intermediate: "badge-intermediate", Advanced: "badge-advanced" };
-//test
 export default function SkillsPage() {
   const { token } = useAuth();
   const [skills, setSkills] = useState([]);
