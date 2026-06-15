@@ -25,6 +25,17 @@ export default function ProfilePage() {
     setTimeout(() => setMsg(""), 2000);
   };
 
+  const calcCompletion = (p) => {
+    const fields = [
+      { label: "Profile Picture", done: !!p.avatar },
+      { label: "Skills", done: p.skills?.length > 0 },
+      { label: "Certifications", done: p.certifications?.length > 0 },
+    ];
+    const percent = Math.round((fields.filter((f) => f.done).length / fields.length) * 100);
+    const missing = fields.filter((f) => !f.done).map((f) => f.label);
+    return { percent, missing };
+  };
+
   if (!profile) return <div className="loading">Loading...</div>;
 
   return (
@@ -74,6 +85,36 @@ export default function ProfilePage() {
           <div className="profile-stats">
             <div className="stat"><span className="stat-val">{profile.skills?.length || 0}</span><span className="stat-lbl">Skills</span></div>
             <div className="stat"><span className="stat-val">{profile.certifications?.length || 0}</span><span className="stat-lbl">Certs</span></div>
+          </div>
+          <div className="profile-completion">
+            {(() => {
+              const { percent, missing } = calcCompletion(profile);
+              return (
+                <>
+                  <div className="completion-header">
+                    <span>Profile Completion</span>
+                    <span>{percent}%</span>
+                  </div>
+                  <div className="completion-track">
+                    <div
+                      className="completion-fill"
+                      style={{
+                        width: `${percent}%`,
+                        backgroundColor: percent === 100 ? "#22c55e" : percent >= 50 ? "#f59e0b" : "#ef4444",
+                      }}
+                    />
+                  </div>
+                  {missing.length > 0 && (
+                    <div className="completion-missing">
+                      <small>Missing:</small>
+                      {missing.map((m) => (
+                        <span key={m} className="missing-tag">{m}</span>
+                      ))}
+                    </div>
+                  )}
+                </>
+              );
+            })()}
           </div>
         </div>
       )}
