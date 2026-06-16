@@ -4,10 +4,23 @@ const cors = require("cors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+const multer = require("multer");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
+// ── Multer config (memory storage — no local folder needed) ───────────────────
+const ALLOWED_TYPES = { "application/pdf": true, "image/jpeg": true, "image/png": true };
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter: (req, file, cb) => {
+    if (ALLOWED_TYPES[file.mimetype]) cb(null, true);
+    else cb(new Error("Only PDF, JPG, JPEG, and PNG files are allowed"));
+  },
+});
 
 const JWT_SECRET = process.env.JWT_SECRET || "kyyba_skill_jwt_secret_dev";
 
@@ -39,6 +52,9 @@ const userSchema = new mongoose.Schema(
         name: { type: String, required: true, trim: true },
         issuer: { type: String, trim: true, default: "" },
         year: { type: Number },
+        fileData: { type: String, default: null },
+        fileType: { type: String, default: null },
+        fileName: { type: String, default: null },
       },
     ],
   },
@@ -145,15 +161,45 @@ app.delete("/api/profile/skills/:skillId", auth, async (req, res) => {
 });
 
 // ── Certifications ────────────────────────────────────────────────────────────
-app.post("/api/profile/certifications", auth, async (req, res) => {
-  const { name, issuer, year } = req.body;
-  if (!name) return res.status(400).json({ error: "Certification name required" });
-  const user = await User.findByIdAndUpdate(
-    req.user.id,
-    { $push: { certifications: { name, issuer, year } } },
-    { new: true }
-  ).select("-password");
-  res.json(user);
+app.post("/api/profile/certifications", auth, upload.single("file"), async (req, res) => {
+  try {
+    const { name, issuer, year } = req.body;
+    if (!name) return res.status(400).json({ error: "Certification name required" });
+    const fileData = req.file ? req.file.buffer.toString("base64") : null;
+    const fileType = req.file ? req.file.mimetype : null;
+    const fileName = req.file ? req.file.originalname : null;
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      { $push: { certifications: { name, issuer, year: year ? Number(year) : undefined, fileData, fileType, fileName } } },
+      { new: true }
+    ).select("-password");
+    res.json(user);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+app.patch("/api/profile/certifications/:certId", auth, upload.single("file"), async (req, res) => {
+  try {
+    const { name, issuer, year } = req.body;
+    if (!name) return res.status(400).json({ error: "Certification name required" });
+    const user = await User.findOne({ _id: req.user.id, "certifications._id": req.params.certId });
+    if (!user) return res.status(404).json({ error: "Certification not found" });
+    const cert = user.certifications.id(req.params.certId);
+    cert.name = name;
+    cert.issuer = issuer || "";
+    cert.year = year ? Number(year) : undefined;
+    if (req.file) {
+      cert.fileData = req.file.buffer.toString("base64");
+      cert.fileType = req.file.mimetype;
+      cert.fileName = req.file.originalname;
+    }
+    await user.save();
+    const updated = await User.findById(req.user.id).select("-password");
+    res.json(updated);
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
 app.delete("/api/profile/certifications/:certId", auth, async (req, res) => {

@@ -29,8 +29,30 @@ const api = {
     fetch(`${BASE}/profile/skills/${skillId}`, { method: "DELETE", headers: headers(token) }).then((r) => r.json()),
 
   // Certifications
-  addCert: (token, data) =>
-    fetch(`${BASE}/profile/certifications`, { method: "POST", headers: headers(token), body: JSON.stringify(data) }).then((r) => r.json()),
+  addCert: (token, data, file) => {
+    const fd = new FormData();
+    fd.append("name", data.name);
+    if (data.issuer) fd.append("issuer", data.issuer);
+    if (data.year) fd.append("year", data.year);
+    if (file) fd.append("file", file);
+    return fetch(`${BASE}/profile/certifications`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` },
+      body: fd,
+    }).then((r) => r.json());
+  },
+  editCert: (token, certId, data, file) => {
+    const fd = new FormData();
+    fd.append("name", data.name);
+    if (data.issuer) fd.append("issuer", data.issuer);
+    if (data.year) fd.append("year", data.year);
+    if (file) fd.append("file", file);
+    return fetch(`${BASE}/profile/certifications/${certId}`, {
+      method: "PATCH",
+      headers: { Authorization: `Bearer ${token}` },
+      body: fd,
+    }).then((r) => r.json());
+  },
   deleteCert: (token, certId) =>
     fetch(`${BASE}/profile/certifications/${certId}`, { method: "DELETE", headers: headers(token) }).then((r) => r.json()),
 

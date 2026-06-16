@@ -152,7 +152,67 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 .cert-issuer { font-size: 13px; color: var(--text-muted); }
 .cert-year { font-size: 12px; color: var(--text-muted); }
 .certs-inline { display: flex; flex-wrap: wrap; gap: 8px; }
+.modern-cert-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: #fff;
+  padding: 20px;
+  border-radius: 16px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
 
+.modern-cert-icon {
+  width: 80px;
+  height: 80px;
+  border-radius: 16px;
+  background: #eef3ff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+}
+
+.modern-cert-content {
+  flex: 1;
+}
+
+.modern-cert-content h3 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.cert-issuer {
+  margin-top: 6px;
+  color: #666;
+}
+
+.cert-year {
+  margin-top: 6px;
+  color: #888;
+}
+
+.certificate-box {
+  width: 150px;
+  height: 120px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  background: #f8f9fc;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+.delete-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 20px;
+}
 /* ── Employee Cards ──────────────────────────────────────────────────────────── */
 .employee-list { display: flex; flex-direction: column; gap: 12px; }
 .employee-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
