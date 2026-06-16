@@ -1,0 +1,42 @@
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany } from 'typeorm';
+import { Skill } from '../skills/skill.entity';
+import { Certification } from '../certifications/certification.entity';
+
+@Entity('users')
+export class User {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  name: string;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column()
+  password: string;
+
+  @Column({ default: 'employee' })
+  role: 'employee' | 'admin';
+
+  @Column({ default: '' })
+  department: string;
+
+  @Column({ default: '' })
+  jobTitle: string;
+
+  @Column({ type: 'int', default: 0 })
+  yearsOfExperience: number;
+
+  @OneToMany(() => Skill, (skill) => skill.user, { cascade: true, eager: true })
+  skills: Skill[];
+
+  @OneToMany(() => Certification, (cert) => cert.user, { cascade: true, eager: true })
+  certifications: Certification[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+}
