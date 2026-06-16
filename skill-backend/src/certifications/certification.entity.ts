@@ -21,4 +21,13 @@ export class Certification {
 
   @Column()
   userId: string;
+
+  @Column({ nullable: true })
+  fileName: string;
+
+  @Column({ nullable: true })
+  fileType: string;
+
+  @Column({ type: 'text', nullable: true })
+  fileData: string;
 }

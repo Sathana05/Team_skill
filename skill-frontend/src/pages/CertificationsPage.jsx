@@ -51,22 +51,26 @@ export default function CertificationsPage() {
   const saveEdit = async (e) => {
     e.preventDefault();
     setEditError("");
-    const data = await api.editCert(token, editingCert._id, editForm, editFile);
+    const data = await api.editCert(token, editingCert.id, editForm, editFile);
     if (data.error) return setEditError(data.error);
     setCerts(data.certifications);
     closeEdit();
   };
 
-  const techIcons = {
-    React: <FaReact />,
-    Java: <FaJava />,
-    Python: <FaPython />,
-    JavaScript: <SiJavascript />,
-    HTML: <SiHtml5 />,
-    CSS: <SiCss />,
-    Node: <FaNodeJs />,
-    MongoDB: <SiMongodb />,
-    AWS: <FaAws />,
+  const techIcons = [
+    { keys: ["react"], icon: <FaReact /> },
+    { keys: ["java"], icon: <FaJava /> },
+    { keys: ["python"], icon: <FaPython /> },
+    { keys: ["javascript", "js"], icon: <SiJavascript /> },
+    { keys: ["html"], icon: <SiHtml5 /> },
+    { keys: ["css"], icon: <SiCss /> },
+    { keys: ["node"], icon: <FaNodeJs /> },
+    { keys: ["mongo"], icon: <SiMongodb /> },
+    { keys: ["aws"], icon: <FaAws /> },
+  ];
+  const getIcon = (name) => {
+    const lower = name.toLowerCase();
+    return techIcons.find((t) => t.keys.some((k) => lower.includes(k)))?.icon || "🏅";
   };
 
   
@@ -145,9 +149,9 @@ export default function CertificationsPage() {
       ) : (
         <div className="certs-list">
           {certs.map((c) => (
-            <div key={c._id} className="modern-cert-card">
+            <div key={c.id} className="modern-cert-card">
               <div className="modern-cert-icon">
-                {techIcons[c.name] || "🏅"}
+                {getIcon(c.name)}
               </div>
               <div className="modern-cert-content">
                 <h3>{c.name}</h3>
@@ -174,7 +178,7 @@ export default function CertificationsPage() {
               >
                 ✏️
               </button>
-              <button className="delete-btn" onClick={() => remove(c._id)}>🗑️</button>
+              <button className="delete-btn" onClick={() => remove(c.id)}>🗑️</button>
             </div>
           ))}
         </div>
