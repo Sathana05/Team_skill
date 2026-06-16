@@ -34,7 +34,7 @@ export default function SearchPage() {
               <input name="skill" placeholder="e.g. React, Node.js, AWS" value={filters.skill} onChange={set} />
             </div>
             <div className="form-group">
-              <label>Department</label>
+              <label>Departments</label>
               <input name="department" placeholder="e.g. Engineering" value={filters.department} onChange={set} />
             </div>
             <div className="form-group">
