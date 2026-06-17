@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, ILike, MoreThanOrEqual } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from './user.entity';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Injectable()
 export class UsersService {
@@ -17,6 +19,23 @@ export class UsersService {
     const { name, department, jobTitle, yearsOfExperience } = body;
     await this.repo.update(userId, { name, department, jobTitle, yearsOfExperience });
     return this.getProfile(userId);
+  }
+
+  async uploadResume(userId: string, file: Express.Multer.File) {
+    const resumeUrl = `/uploads/${file.filename}`;
+    const resumeOriginalName = file.originalname;
+    await this.repo.update(userId, { resumeUrl, resumeOriginalName });
+    return this.getProfile(userId);
+  }
+
+  async deleteResume(userId: string) {
+    const user = await this.repo.findOne({ where: { id: userId } });
+    if (user?.resumeUrl) {
+      const filePath = path.join(process.cwd(), 'uploads', path.basename(user.resumeUrl));
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    }
+    await this.repo.update(userId, { resumeUrl: '', resumeOriginalName: '' });
+    return { success: true };
   }
 
   async searchEmployees(query: any) {

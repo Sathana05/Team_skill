@@ -145,7 +145,7 @@ export default function SkillsPage() {
                     {counts[key]}
                   </Typography>
                   <Divider sx={{ my: 1.5 }} />
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  {/* <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                     <LinearProgress
                       variant="determinate"
                       value={key === "total" ? 100 : counts.total ? (counts[key] / counts.total) * 100 : 0}
@@ -156,11 +156,11 @@ export default function SkillsPage() {
                         bgcolor: lightBg,
                         "& .MuiLinearProgress-bar": { bgcolor: accent },
                       }}
-                    />
-                    <Typography variant="caption" sx={{ color: "#64748b", fontWeight: 600, minWidth: 32 }}>
+                    /> */}
+                    {/* <Typography variant="caption" sx={{ color: "#64748b", fontWeight: 600, minWidth: 32 }}>
                       {key === "total" ? "100%" : counts.total ? `${Math.round((counts[key] / counts.total) * 100)}%` : "0%"}
-                    </Typography>
-                  </Box>
+                    </Typography> */}
+                  {/* </Box> */}
                 </CardContent>
               </Card>
             </Grid>

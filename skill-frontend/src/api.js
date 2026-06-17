@@ -62,6 +62,15 @@ const api = {
     return fetch(`${BASE}/employees?${qs}`, { headers: headers(token) }).then((r) => r.json());
   },
 
+  // Resume
+  uploadResume: (token, file) => {
+    const fd = new FormData();
+    fd.append("resume", file);
+    return fetch(`${BASE}/profile/resume`, { method: "POST", headers: { Authorization: `Bearer ${token}` }, body: fd }).then((r) => r.json());
+  },
+  deleteResume: (token) =>
+    fetch(`${BASE}/profile/resume`, { method: "DELETE", headers: headers(token) }).then((r) => r.json()),
+
   // Admin
   getStats: (token) =>
     fetch(`${BASE}/admin/stats`, { headers: headers(token) }).then((r) => r.json()),

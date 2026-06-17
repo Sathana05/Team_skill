@@ -28,6 +28,12 @@ export class User {
   @Column({ type: 'int', default: 0 })
   yearsOfExperience: number;
 
+  @Column({ default: '' })
+  resumeUrl: string;
+
+  @Column({ default: '' })
+  resumeOriginalName: string;
+
   @OneToMany(() => Skill, (skill) => skill.user, { cascade: true, eager: true })
   skills: Skill[];
 
